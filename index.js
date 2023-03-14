@@ -179,8 +179,8 @@ async function getUser(req, res, next) {
   next();
 }
 
-const port =process.env.PORT ||PORT ;
-app.listen(PORT, () => {
+const port =process.env.PORT ||3001 ;
+app.listen("3001", () => {
   console.log(`Server running on port ${port}`);
 });
 console.log("Cloudinary connected successfully");
