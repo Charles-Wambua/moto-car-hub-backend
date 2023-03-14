@@ -14,6 +14,7 @@ app.use(
     origin: ["https://moto-car-hub.onrender.com", "http://localhost:3000"],
   })
 );
+
 app.use(express.json());
 
 // Connect to MongoDB database
