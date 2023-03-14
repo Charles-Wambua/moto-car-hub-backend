@@ -20,7 +20,7 @@ app.use(express.json());
 // Connect to MongoDB database
 mongoose
   .connect(
-    "mongodb+srv://charles:charlie98@jijomotors.qwb5cf0.mongodb.net/jijomotors?retryWrites=true&w=majority",
+    process.env.MONGO_URI,,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
