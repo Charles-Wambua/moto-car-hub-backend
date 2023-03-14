@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://moto-car-hub.onrender.com", "http://localhost:3000"],
+    origin: ["https://moto-car-hub.onrender.com"],
   })
 );
 
