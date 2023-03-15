@@ -19,10 +19,11 @@ app.use(express.json());
 
 // Connect to MongoDB database
 mongoose
-  .connect(
-    process.env.MONGO_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+
   .then(() => {
     console.log("Database connected successfully");
   })
@@ -71,8 +72,6 @@ app.get("/getCars", async (req, res) => {
 });
 
 // Add a new car
-
-// Add a new car
 app.post("/addCar", upload.single("image"), async (req, res) => {
   try {
     // Create a new car object
@@ -87,6 +86,19 @@ app.post("/addCar", upload.single("image"), async (req, res) => {
     res.status(201).json(savedCar);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// Delete a car
+app.delete("/deleteCar/:id", async (req, res) => {
+  try {
+    const deletedCar = await CarModel.findByIdAndDelete(req.params.id);
+    if (!deletedCar) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+    res.status(200).json(deletedCar);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -180,7 +192,7 @@ async function getUser(req, res, next) {
   next();
 }
 
-const port =process.env.PORT ||3001 ;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
