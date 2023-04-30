@@ -30,6 +30,21 @@ mongoose
   .catch((error) => {
     console.log("Database connection error: " + error);
   });
+// mongoose
+//   // .connect(process.env.MONGO_URI,
+//   .connect("mongodb+srv://charles:charlie98@cluster0.qkh8kev.mongodb.net/motors?retryWrites=true&w=majority",
+//     {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+
+//   .then(() => {
+//     console.log("Database connected successfully");
+//   })
+//   .catch((error) => {
+//     console.log("Database connection error: " + error);
+//   });
+
 
 // Configure Cloudinary
 cloudinary.config({
@@ -55,7 +70,7 @@ const carSchema = new mongoose.Schema({
   name: String,
   description: String,
   price: Number,
-  image: String,
+  images: [String],
 });
 
 // Create a model based on the schema
@@ -70,16 +85,27 @@ app.get("/getCars", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.get("/getCars/:id", async (req, res) => {
+  try {
+    const car = await CarModel.findById(req.params.id);
+    if (!car) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+    res.status(200).json(car);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Add a new car
-app.post("/addCar", upload.single("image"), async (req, res) => {
+app.post("/addCar",  upload.array("images", 10), async (req, res) => {
   try {
     // Create a new car object
     const newCar = new CarModel({
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-      image: req.file.path,
+      images: req.files.map(file => file.path),
     });
 
     const savedCar = await newCar.save();
@@ -106,6 +132,10 @@ app.delete("/deleteCar/:id", async (req, res) => {
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Create a model based on the schema
@@ -129,6 +159,7 @@ app.post("/register", async (req, res) => {
   const user = new UserModel({
     email: email,
     password: hashedPassword,
+    isAdmin: true,
   });
 
   try {
@@ -138,8 +169,6 @@ app.post("/register", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-
-// Login a user
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -155,11 +184,18 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
   }
 
-  // Create token
-  const token = jwt.sign({ _id: user._id }, "secretkey");
+  // Create token payload
+  const payload = {
+    _id: user._id,
+    isAdmin: user.isAdmin,
+  };
 
-  res.header("auth-token", token).json({ token: token });
+  // Create token
+  const token = jwt.sign(payload, "charlie98782738");
+
+  res.json({ token: token, isAdmin: user.isAdmin });
 });
+
 
 // Get all users from the database (only for testing purposes)
 app.get("/users", async (req, res) => {
@@ -170,6 +206,42 @@ app.get("/users", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+// Middleware function to decode JWT token and add decoded user object to request object
+const isAdmin = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  const isAdmin = localStorage.getItem("isAdmin");
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, "charlie98782738");
+    const user = decoded.user;
+    if (isAdmin || user.isAdmin) {
+      req.user = user;
+      next();
+    } else {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+};
+
+
+
+
+// Get current user
+app.get("/users/me", isAdmin, async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Get a specific user by ID from the database (only for testing purposes)
 app.get("/users/:id", getUser, (req, res) => {
