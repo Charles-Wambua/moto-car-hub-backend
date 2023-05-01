@@ -159,7 +159,7 @@ app.post("/register", async (req, res) => {
   const user = new UserModel({
     email: email,
     password: hashedPassword,
-    isAdmin: true,
+    isAdmin: false,
   });
 
   try {
