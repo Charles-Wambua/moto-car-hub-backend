@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    // origin: ["https://moto-car-hub.onrender.com"],
+    origin: ["https://moto-car-hub.onrender.com"],
   })
 );
 
