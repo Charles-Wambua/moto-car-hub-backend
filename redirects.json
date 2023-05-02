@@ -1,0 +1,7 @@
+[
+    { "from": "/admin", "to": "/index.html" },
+    { "from": "/login", "to": "/index.html" },
+    { "from": "/register", "to": "/index.html" },
+    { "from": "/*", "to": "/index.html", "status": 200 }
+  ]
+  

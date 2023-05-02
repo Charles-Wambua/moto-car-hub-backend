@@ -11,29 +11,15 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://moto-car-hub.onrender.com"],
+    // origin: ["https://moto-car-hub.onrender.com"],
   })
 );
 
 app.use(express.json());
 
 // Connect to MongoDB database
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-
-  .then(() => {
-    console.log("Database connected successfully");
-  })
-  .catch((error) => {
-    console.log("Database connection error: " + error);
-  });
 // mongoose
-//   // .connect(process.env.MONGO_URI,
-//   .connect("mongodb+srv://charles:charlie98@cluster0.qkh8kev.mongodb.net/motors?retryWrites=true&w=majority",
-//     {
+//   .connect(process.env.MONGO_URI, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,
 //   })
@@ -44,6 +30,20 @@ mongoose
 //   .catch((error) => {
 //     console.log("Database connection error: " + error);
 //   });
+mongoose
+  // .connect(process.env.MONGO_URI,
+  .connect("mongodb+srv://charles:charlie98@cluster0.qkh8kev.mongodb.net/motors?retryWrites=true&w=majority",
+    {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch((error) => {
+    console.log("Database connection error: " + error);
+  });
 
 
 // Configure Cloudinary
