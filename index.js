@@ -6,7 +6,7 @@ const { v2: cloudinary } = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const path = require('path');
+// const path = require('path');
 
 const app = express();
 
@@ -17,16 +17,16 @@ app.use(
 );
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/.well-known/assetlinks.json', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'redirects.json'));
-});
+// app.get('/.well-known/assetlinks.json', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'redirects.json'));
+// });
 
-// Serve the React application on all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// // Serve the React application on all other routes
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 
 
 // Connect to MongoDB database
