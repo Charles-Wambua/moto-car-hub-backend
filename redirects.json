@@ -1,7 +1,7 @@
-[
-    { "from": "/admin", "to": "/index.html" },
-    { "from": "/login", "to": "/index.html" },
-    { "from": "/register", "to": "/index.html" },
-    { "from": "/*", "to": "/index.html", "status": 200 }
-  ]
-  
+[  {    "source": "/getCars",    "destination": "https://moto-car-hub-api.onrender.com/getCars"  },
+  {    "source": "/getCars/:id",    "destination": "https://moto-car-hub-api.onrender.com/getCars/:id"  },  
+  {    "source": "/addCar",    "destination": "https://moto-car-hub-api.onrender.com/addCar"  }, 
+   {    "source": "/deleteCar/:id",    "destination": "https://moto-car-hub-api.onrender.com/deleteCar/:id"  }, 
+    {    "source": "/register",    "destination": "https://moto-car-hub-api.onrender.com/register"  }, 
+     {    "source": "/login",    "destination": "https://moto-car-hub-api.onrender.com/login"  }
+    ]
